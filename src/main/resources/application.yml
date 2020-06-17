@@ -1,2 +1,7 @@
 server:
   port: 8888
+
+
+quizService:
+  host: 'http://localhost'
+  port: 8100

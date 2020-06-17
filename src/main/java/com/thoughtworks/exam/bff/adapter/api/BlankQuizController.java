@@ -24,4 +24,10 @@ public class BlankQuizController {
     public String create(@RequestBody CreateQuizCommand command) {
         return blankQuizClient.create(command);
     }
+
+    @PutMapping("/{blankQuizId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void create(@PathVariable("blankQuizId") String blankQuizId, @RequestBody CreateQuizCommand command) {
+        blankQuizClient.update(blankQuizId, command);
+    }
 }
