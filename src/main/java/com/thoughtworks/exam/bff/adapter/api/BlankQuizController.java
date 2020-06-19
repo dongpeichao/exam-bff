@@ -3,6 +3,7 @@ package com.thoughtworks.exam.bff.adapter.api;
 import com.thoughtworks.exam.bff.adapter.client.BlankQuizClient;
 import com.thoughtworks.exam.bff.adapter.client.BlankQuizDTO;
 import com.thoughtworks.exam.bff.adapter.client.CreateQuizCommand;
+import com.thoughtworks.exam.bff.adapter.client.QueryQuizDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,11 @@ public class BlankQuizController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void create(@PathVariable("blankQuizId") String blankQuizId, @RequestBody CreateQuizCommand command) {
         blankQuizClient.update(blankQuizId, command);
+    }
+
+    @GetMapping("/{blankQuizId}")
+    @ResponseStatus(HttpStatus.OK)
+    public QueryQuizDTO query(@PathVariable("blankQuizId") String blankQuizId) {
+        return  blankQuizClient.query(blankQuizId);
     }
 }

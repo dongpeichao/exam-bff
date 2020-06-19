@@ -5,3 +5,7 @@ server:
 quizService:
   host: 'http://localhost'
   port: 8100
+
+paperService:
+  host: 'http://localhost'
+  port: 8200

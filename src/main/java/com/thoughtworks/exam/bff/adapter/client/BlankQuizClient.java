@@ -27,4 +27,8 @@ public class BlankQuizClient {
     public void update(String blankQuizId, CreateQuizCommand command) {
         restTemplate.put( quizHost + ":" + quizPort + "/quizzes/" + blankQuizId, command);
     }
+
+    public QueryQuizDTO query(String blankQuizId) {
+        return restTemplate.getForObject( quizHost + ":" + quizPort + "/quizzes/" + blankQuizId, QueryQuizDTO.class);
+    }
 }

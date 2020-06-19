@@ -1,7 +1,8 @@
 package com.thoughtworks.exam.bff.adapter.api;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.thoughtworks.exam.bff.adapter.client.CreateQuizCommand;
+import com.thoughtworks.exam.bff.adapter.client.CreatePaperCommand;
+import com.thoughtworks.exam.bff.adapter.client.CreatePaperCommand.BlankQuiz;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +17,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureStubRunner
 @AutoConfigureMockMvc
-class BlankQuizControllerTest {
+class BlankPaperControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,38 +41,32 @@ class BlankQuizControllerTest {
     }
 
     @Test
-    public void should_create_quizzes_successfully() throws Exception {
-        CreateQuizCommand createQuizCommand = CreateQuizCommand.builder().score(5)
-                .question("防腐测试是什么？")
-                .referenceAnswer("防腐测试是为了及时预警第三方API的破坏，防止因反馈的缺失而继续发生腐化的测试")
+    public void should_create_papers_successfully() throws Exception {
+        CreatePaperCommand createPaperCommand = CreatePaperCommand.builder()
                 .teacherId("9043inol9f4ifnflmakmfdas09fd4ifnflma")
+                .quizzes(Arrays.asList(new BlankQuiz[]{
+                        BlankQuiz.builder().quizId("9043inol9f4if-flmakmfdas09fd4-fnflma").score(10).build(),
+                        BlankQuiz.builder().quizId("9043inol9f3rf-fldakmfdas09fd4-fnflma").score(10).build(),
+                        BlankQuiz.builder().quizId("9043inol9f3rf-fldakmfdas09fd4-fnflma").score(10).build(),
+                        BlankQuiz.builder().quizId("9043inol9f3rf-fldakmfdas09fd4-fnflma").score(10).build(),
+                        BlankQuiz.builder().quizId("9043inol9f3rf-fldakmfdas09fd4-fnflma").score(10).build()
+                }))
                 .build();
-        ResultActions resultActions = mockMvc.perform(post("/quizzes")
+        ResultActions resultActions = mockMvc.perform(post("/papers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new JsonMapper().writeValueAsString(createQuizCommand)))
+                .content(new JsonMapper().writeValueAsString(createPaperCommand)))
                 .andExpect(status().isCreated());
         String responseString = resultActions.andReturn().getResponse().getContentAsString();
         assertThat(responseString).matches("[a-zA-Z-0-9]{36}");
     }
 
     @Test
-    public void should_update_quizzes_successfully() throws Exception {
-        CreateQuizCommand createQuizCommand = CreateQuizCommand.builder().score(5)
-                .question("防腐测试是什么？")
-                .referenceAnswer("防腐测试是为了及时预警第三方API的破坏，防止因反馈的缺失而继续发生腐化的测试")
-                .teacherId("9043inol9f4ifnflmakmfdas09fd4ifnflma")
-                .build();
-        mockMvc.perform(put("/quizzes/" + "d18f752b-c34e-4be9-b7d1-766a618497f1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new JsonMapper().writeValueAsString(createQuizCommand)))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    public void should_query_quizzes_successfully() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get("/quizzes/d18f752b-c34e-4be9-b7d1-766a618497f1")
+    public void should_query_papers_successfully() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get("/papers/9043inol9f4if-flmakmfdas09fd4-fnflma")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
         System.out.println(resultActions.andReturn().getResponse().getContentAsString());
     }
+
 }
