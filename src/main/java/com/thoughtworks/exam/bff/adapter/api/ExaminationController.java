@@ -26,4 +26,11 @@ public class ExaminationController {
         return examinationClient.createAnswerSheet(examinationId);
     }
 
+    @PutMapping("/{examinationId}/answer-sheet/{answerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public SubmitAnswerSheetDTO submitAnswer(@PathVariable("examinationId")String examinationId, @PathVariable("answerId")String answerId,
+                                      @RequestBody SubmitAnswerCommand submitAnswerCommand){
+        return examinationClient.submitAnswer(examinationId, answerId, submitAnswerCommand);
+    }
+
 }

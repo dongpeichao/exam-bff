@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.exam.bff.adapter.client.CreateAnswerSheetDTO;
 import com.thoughtworks.exam.bff.adapter.client.CreateExaminationCommand;
 import com.thoughtworks.exam.bff.adapter.client.CreateExaminationCommand.BlankQuiz;
+import com.thoughtworks.exam.bff.adapter.client.SubmitAnswerCommand;
+import com.thoughtworks.exam.bff.adapter.client.SubmitAnswerSheetDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +21,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -79,4 +83,36 @@ class ExaminationControllerTest {
         assertThat(response.getAnswerSheetId()).matches("[a-zA-Z-0-9]{36}");
     }
 
+    @Test
+    public void should_submit_answer_sheet_successfully() throws Exception {
+        SubmitAnswerCommand submitAnswerCommand = SubmitAnswerCommand.builder()
+                .studentId("9043inol9f4if-flmakmfdas09fd4-fnflma")
+                .answer("a,b,c")
+                .startTime(LocalDateTime.parse("2020-06-29T12:00:00"))
+                .submitTime(LocalDateTime.parse("2020-06-29T13:15:00"))
+                .build();
+        ResultActions resultActions = mockMvc.perform(put("/examinations/9idk4-lokfu-jr874j3-h8d9j4-hor82kd77/answer-sheet/9idk4-lokfu-jr874j3-u8d9j4-hor82kd77")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(submitAnswerCommand)))
+                .andExpect(status().isOk());
+
+        String responseString = resultActions.andReturn().getResponse().getContentAsString();
+
+        SubmitAnswerSheetDTO response = objectMapper.readValue(responseString, SubmitAnswerSheetDTO.class);
+        assertThat(response.getAnswer()).isEqualTo("a,b,c");
+    }
+
+    @Test
+    public void should_submit_answer_sheet_fail_when_expired() throws Exception {
+        SubmitAnswerCommand submitAnswerCommand = SubmitAnswerCommand.builder()
+                .studentId("9043inol9f4if-flmakmfdas09fd4-fnflma")
+                .answer("a,b,c")
+                .startTime(LocalDateTime.parse("2020-06-29T12:00:00"))
+                .submitTime(LocalDateTime.parse("2020-06-29T15:00:00"))
+                .build();
+        mockMvc.perform(put("/examinations/9idk4-lokfu-jr874j3-h8d9j4-hor82kd77/answer-sheet/9idk4-lokfu-jr874j3-u8d9j4-hor82kd77")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(submitAnswerCommand)))
+                .andExpect(status().isBadRequest());
+    }
 }
