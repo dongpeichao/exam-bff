@@ -13,3 +13,7 @@ quizService:
 paperService:
   host: 'http://localhost'
   port: 8100
+
+examinationService:
+  host: 'http://localhost'
+  port: 8100
