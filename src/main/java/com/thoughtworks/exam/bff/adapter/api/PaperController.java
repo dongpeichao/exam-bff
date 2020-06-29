@@ -7,26 +7,26 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/papers")
-public class BlankPaperController {
-    private final BlankPaperClient blankPaperClient;
+public class PaperController {
+    private final PaperClient paperClient;
     private final BlankQuizClient blankQuizClient;
 
 
-    public BlankPaperController(BlankPaperClient blankPaperClient, BlankQuizClient blankQuizClient) {
-        this.blankPaperClient = blankPaperClient;
+    public PaperController(PaperClient paperClient, BlankQuizClient blankQuizClient) {
+        this.paperClient = paperClient;
         this.blankQuizClient = blankQuizClient;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String create(@RequestBody CreatePaperCommand command) {
-        return blankPaperClient.create(command);
+        return paperClient.create(command);
     }
 
     @GetMapping("/{paperId}")
     @ResponseStatus(HttpStatus.OK)
     public QueryPaperDTO query(@PathVariable("paperId") String paperId) {
-        QueryPaperDTO queryPaperDTO = blankPaperClient.query(paperId);
+        QueryPaperDTO queryPaperDTO = paperClient.query(paperId);
         if(null != queryPaperDTO && !CollectionUtils.isEmpty(queryPaperDTO.getQuizzes())) {
             queryPaperDTO.getQuizzes().forEach(queryQuizDTO -> {
                 QueryQuizDTO quiz = blankQuizClient.query(queryQuizDTO.getId());

@@ -3,11 +3,10 @@ package com.thoughtworks.exam.bff.adapter.client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class BlankPaperClient {
+public class PaperClient {
 
     @Value("${paperService.host}")
     private String paperHost;
@@ -17,12 +16,12 @@ public class BlankPaperClient {
 
     private RestTemplate restTemplate;
 
-    public BlankPaperClient(RestTemplateBuilder restTemplateBuilder) {
+    public PaperClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
     public String create(CreatePaperCommand createPaperCommand) {
-        return restTemplate.postForObject( paperHost + ":" + paperPort + "/papers", createPaperCommand, BlankPaperDTO.class).toString();
+        return restTemplate.postForObject( paperHost + ":" + paperPort + "/papers", createPaperCommand, PaperDTO.class).toString();
     }
 
     public QueryPaperDTO query(String paperId) {

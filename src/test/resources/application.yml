@@ -2,7 +2,7 @@ stubrunner:
   repositoryRoot: 'stubs://file:///Users/peichao.dong/Documents/projects/dpc/sbux_jr/exam-quiz-stub/src/test/resources/contracts'
   ids:
     - 'com.thoughtworks:exam-quiz-service-stubs:8100'
-    - 'com.thoughtworks:exam-paper-service-stubs:8200'
+#    - 'com.thoughtworks:exam-paper-service-stubs:8200'
   stubs-mode: remote
   generate-stubs: true
 
@@ -13,4 +13,8 @@ quizService:
 
 paperService:
   host: 'http://localhost'
-  port: 8200
+  port: 8100
+
+examinationService:
+    host: 'http://localhost'
+    port: 8100

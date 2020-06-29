@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BlankPaperDTO {
+public class PaperDTO {
     private String paperId;
 
     @Override
